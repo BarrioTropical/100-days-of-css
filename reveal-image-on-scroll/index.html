@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <title>Reveal image on scroll</title>
+</head>
+<body>
+<style>
+    /* general */
+*{
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img{
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.counter{
+    position: fixed;
+    padding: 2em;
+    top: 0;
+    left: 0;
+
+    color: #000;
+
+    font-family: "Poppins", sans-serif;
+}
+
+.link{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bg-color{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(250, 186, 74);
+    background: linear-gradient(
+        0deg,
+        rgba(250, 186, 74, 1) 0%,
+        rgba(252, 176, 69, 0) 100%,
+    );
+    z-index: -1;
+}
+
+.items{
+    width: 100%;
+    height: 100%;
+
+    padding: 4em 2em;
+
+    font-family: "Poppins", sans-serif;
+}
+
+.item{
+    width: 40%;
+    margin-bottom: 4em;
+}
+
+.item-info{
+    padding: 0.5em 0;
+    text-transform: uppercase;
+    font-family: sans-serif;
+}
+
+.item-img{
+    overflow: hidden;
+}
+
+.item-img img{
+    will-change: transform;
+    transform: scale(1.25);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.item:nth-child(1) .item-img{
+    background-color: #000;
+}
+
+.item:nth-child(2) .item-img{
+    background-color: #fff;
+}
+
+.item:nth-child(1){
+    position: relative;
+    left: 0%;
+}
+
+.item:nth-child(2){
+    position: relative;
+    left: 20%;
+}
+
+
+</style>
+
+    <div class="counter"><p>0</p></div>
+    <div class="bg-color"></div>
+
+    <div class="items">
+        <div class="item">
+            <div class="item-img">
+                <img src="https://images.pexels.com/photos/19549925/pexels-photo-19549925/free-photo-of-natura-molla-primavera-fiore.jpeg" alt="">
+            </div>
+            <div class="item-info">
+                <p>Item description</p>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="item-img">
+                <img src="https://images.pexels.com/photos/19549925/pexels-photo-19549925/free-photo-of-natura-molla-primavera-fiore.jpeg" alt="">
+            </div>
+            <div class="item-info">
+                <p>Item description</p>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const bgColors = [
+    "#000",
+    "#fff"
+    ];
+
+    const bgColorElement = document.querySelector(".bg-color");
+
+    gsap.utils.toArray("item").forEach((item, index) => {
+        let img = item.querySelector(".item-img img");
+
+      gsap.fromTo(
+        img,
+        {clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)"},
+        {clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        ease: "power1.out",
+        duration: 2,
+        scrollTrigger:{
+            trigger: item,
+            start: "center bottom",
+            end:"bottom top",
+            toggleActions: "play none none none",
+            onEnter: () => updateBackground(bgColors[index]),
+            onEnterBack: () => updateBackground(bgColors[index]),
+        },
+    }
+
+      );  
+    });
+
+    function updateBackground(color){
+        gsap.to(bgColorElement, {
+            background: `linear-gradient(0deg, ${color} 0%, rgba(252, 176, 69, 0 ) 100%)`,
+            duration: 2,
+            ease: "power1.out",
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function(){
+        const counterElement = document.querySelector(".counter p");
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+        function updateScrollPercentage(){
+            const scrollPosition = window.scrollY;
+            const scrollefPercentage = Math.round((scrollPosition / docHeight) * 100);
+            counterElement.textContent = `${scrolledPercentage}`;
+        }
+
+        window.addEventListener("scroll", updateScrollPercentage);
+    });
+
+</script>
+
+</body>
+</html>
