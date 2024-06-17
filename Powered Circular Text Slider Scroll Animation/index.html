@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="cursor"></div>
+
+    <nav>
+        <a href="#">Codegrind</a>
+        <p>Unlock Source Code with PRO</p>
+    </nav>
+
+    <footer>
+        <div class="links">
+            <a href="#">Ig</a>
+            <a href="#">Ln</a>
+        </div>
+        <p>Link in the description</p>
+    </footer>
+
+    <div class="container">
+        <div class="gallery"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"></script>
+    <script type="module" src="./data.js"></script>
+    <script type="module" src="./script.js"></script>
+
+    <script>
+        import { interiors } from "./data.js";
+
+document.addEventListener("DOMContentLoaded", function(){
+    const cursor = document.querySelector(".cursor");
+    const gallery = document.querySelector(".gallery");
+
+    const numberOfItems = 9;
+
+    const radius = 1100;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const angleIncrement = (2 * Math.PI) / numberOfItems;
+
+    fot (let i = 0; i < numberOfItems; i++){
+        const item = document.createElement("div");
+        item.className = "item";
+        const p = document.createElement("p");
+        const count = document.createElement("span");
+        p.textContent = interiors[i].name;
+        count.textContent = `(${Math.floor(Math.random() * 50) + 1})`;
+        item.appendChild(p);
+        p.appendChild(count);
+        gallery.appendChild(item);
+
+        const angel = i * angleIncrement;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        const rotation = (angle * 180)/ Math.PI;
+
+        gsap.set(item, {
+            x: x + "px",
+            y: y + "px",
+            rotation: rotation, 
+        });
+
+
+        item.addEventListener("mouseover", function(){
+            const imgSrc = `./assets/img${i + 1}.jpg`;
+            const img = document.createElement("img");
+            img.src = imgSrc;
+            img.style.clipPath = "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)";
+            cursor.appendChild(img);
+
+            gsap.to(img, {
+                clipPath = "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+                duration: 1,
+                ease: "power3.out",
+            });
+        }); 
+
+        item.addEventListener("mouseout", function(){
+            const imgs = cursor.getElementsByTagName("img");
+            if (img.length){
+                const lastImg = imgs[imgs.length -1];
+                Array.from(imgs).forEach((img, index) =>{
+                    if (img !== lastImg){
+                        gsap.to(img, {
+                            clipPath = "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+                            duration: 1,
+                            ease: "power3.out",
+                            onComplete: () => {
+                                setTimeout{() => {
+                                    img.remove();
+                                }, 1000};
+                            },
+                        });
+                    }
+                });
+
+
+                gsap.to(lastImg, {
+                    clipPath = "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+                            duration: 1,
+                            ease: "power3.out",
+                            delay: 0.25,
+                });
+
+            }
+        });
+        }
+
+        function updatePosition(){
+            const scrollAmount = window.scrollY * 0.001;
+            document.querySelectorAll(".item").forEach(function (item, index){
+                const angle = index * angleIncrement + scrollAmount;
+                const x = cenerX + radius * Math.cos(angle);
+                const y = cenerY + radius * Math.sin(angle);
+                const rotation = (angle * 180) / Math.PI;
+
+                gsap.to(item, {
+                    duration: 0.05,
+                    x: x + "px",
+                    y: y + "px",
+                    rotation: rotation,
+                    ease: "elastic.out(1, 0.3",
+                });
+                
+            });
+        }
+
+        updatePosition();
+        document.addEventListener("scroll", updatePosition);
+
+        document.addEventListener("mousemove", function (e){
+            gsap.to(cursor, {
+                x: e.clientX - 150,
+                y: e.clientY - 200,
+                duration: 1,
+                ease: "power3.out",
+            })
+        })
+
+});
+
+
+    </script>
+
+</body>
+</html>
