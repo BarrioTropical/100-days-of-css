@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Document</title>
+</head>
+<body>
+
+<style>
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    color: #fff;
+}
+
+.container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 500vw; /* Adjust based on the number of sections */
+    height: 90vh;
+    display: flex;
+}
+
+section{
+    position: relative;
+    width: 100vw;
+    height: 100%;
+    padding: 6em 2em 0 2em;
+    display: flex;
+    gap: 2em;
+    overflow: hidden;
+}
+
+section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+h1{
+    width: 50%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 40px;
+    text-transform: uppercase;
+}
+
+p{
+    width: 40%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+nav{
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    padding: 2em;
+    display: flex;
+    justify-content: space-between;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.timeline{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 10vh;
+    padding: 2.25em 1em;
+    display: flex;
+    justify-content: space-around;
+}
+
+.marker{
+    width: 1px;
+    height: 100%;
+    background-color: #fff;
+}
+
+.scroller{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0%, -50%);
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    background-color: #000;
+    cursor: pointer;
+    line-height: 120%;
+}
+
+span{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    padding: 0 3em;
+}
+</style>
+
+<nav>
+    <a href="#">Urban Eclipse</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#">Work</a>
+</nav>
+
+<div class="container">
+    <section id="section-1">
+        <h1>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore fugit reiciendis quibusdam natus quos magni pariatur voluptas architecto porro, eum dignissimos vitae minus praesentium soluta consequuntur adipisci modi similique minima!</p>
+    </section>
+    <section id="section-2">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+    <section id="section-3">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+    <section id="section-4">
+        <h1>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore fugit reiciendis quibusdam natus quos magni pariatur voluptas architecto porro, eum dignissimos vitae minus praesentium soluta consequuntur adipisci modi similique minima!</p>
+    </section>
+    <section id="section-5">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+</div>
+
+<div class="timeline">
+    <div class="scroller">
+        <p>[<span>Drag</span>]</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>   
+<script>
+    gsap.registerPlugin(Draggable);
+
+    window.onload = function () {
+        const timeline = document.querySelector(".timeline");
+        const scroller = document.querySelector(".scroller");
+        const container = document.querySelector(".container");
+        const timelineWidth = timeline.offsetWidth;
+        const scrollerWidth = scroller.offsetWidth;
+        const gap = parseInt(window.getComputedStyle(document.body).fontSize);
+
+        const maxDragX = timelineWidth - scrollerWidth - 2 * gap;
+        
+        for (let i=0; i<50; i++){
+            const marker = document.createElement("div");
+            marker.classList.add("marker");
+            timeline.appendChild(marker);
+        }
+
+        Draggable.create(scroller, {
+            type: "x",
+            bounds: {
+                minX: gap,
+                maxX: timelineWidth - scrollerWidth - gap,
+            },
+            onDrag: function() {
+                let progress = (this.x - gap) / maxDragX;
+                let containerX = -progress * (container.scrollWidth - window.innerWidth);
+
+                gsap.to(container, {
+                    x: containerX,
+                    duration: 1,
+                    ease: "power3.out",
+                });
+            },
+        });
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Scroll with Drag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 500vw; /* Adjust based on the total width of sections */
+            height: 90vh;
+            display: flex;
+            transition: transform 0.1s ease;
+        }
+
+        section {
+            position: relative;
+            width: 100vw;
+            height: 100%;
+            padding: 6em 2em 0 2em;
+            display: flex;
+            gap: 2em;
+            overflow: hidden;
+        }
+
+        section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            width: 50%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+
+        p {
+            width: 40%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            padding: 2em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .timeline {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 10vh;
+            padding: 2.25em 1em;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .marker {
+            width: 1px;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .scroller {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translate(-50%, -50%);
+            font-family: Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+            background-color: #000;
+            cursor: pointer;
+            line-height: 120%;
+            padding: 0 1em;
+            z-index: 100; /* Ensure scroller is above other content */
+        }
+
+        span {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+            padding: 0 3em;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#">Urban Eclipse</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+    <a href="#">Work</a>
+</nav>
+
+<div class="container">
+    <section id="section-1">
+        <h1>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore fugit reiciendis quibusdam natus quos magni pariatur voluptas architecto porro, eum dignissimos vitae minus praesentium soluta consequuntur adipisci modi similique minima!</p>
+    </section>
+    <section id="section-2">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+    <section id="section-3">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+    <section id="section-4">
+        <h1>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore fugit reiciendis quibusdam natus quos magni pariatur voluptas architecto porro, eum dignissimos vitae minus praesentium soluta consequuntur adipisci modi similique minima!</p>
+    </section>
+    <section id="section-5">
+        <div class="img"><img src="https://images.pexels.com/photos/19200809/pexels-photo-19200809/free-photo-of-impianto-pianta-foglie-crescita.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/26236827/pexels-photo-26236827/free-photo-of-neve-inverno-animale-carino.jpeg" alt=""></div>
+        <div class="img"><img src="https://images.pexels.com/photos/25929108/pexels-photo-25929108/free-photo-of-uccello-animale-foglia-sfocatura.jpeg" alt=""></div>
+    </section>
+</div>
+
+<div class="timeline">
+    <div class="scroller">
+        <p>[<span>Drag</span>]</p>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        const timeline = document.querySelector(".timeline");
+        const scroller = document.querySelector(".scroller");
+        const container = document.querySelector(".container");
+        const timelineWidth = timeline.offsetWidth;
+        const scrollerWidth = scroller.offsetWidth;
+        const gap = parseInt(window.getComputedStyle(document.body).fontSize);
+
+        const maxDragX = timelineWidth - scrollerWidth - 2 * gap;
+
+        let isDragging = false;
+        let startX;
+        let initialScrollerX;
+
+        scroller.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            initialScrollerX = scroller.offsetLeft;
+            document.body.style.cursor = 'grabbing';
+            scroller.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.cursor = 'default';
+            scroller.style.cursor = 'grab';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            let newScrollerX = initialScrollerX + dx;
+
+            if (newScrollerX < gap) newScrollerX = gap;
+            if (newScrollerX > maxDragX) newScrollerX = maxDragX;
+
+            const progress = (newScrollerX - gap) / (maxDragX - gap);
+            const containerX = -progress * (container.offsetWidth - window.innerWidth);
+
+            container.style.transform = `translateX(${containerX}px)`;
+            scroller.style.left = `${newScrollerX}px`;
+        });
+
+        scroller.style.cursor = 'grab';
+
+        // Adding markers dynamically for the timeline
+        for (let i = 0; i < 50; i++) {
+            const marker = document.createElement("div");
+            marker.classList.add("marker");
+            timeline.appendChild(marker);
+        }
+    };
+</script>
+
+</body>
+</html>
